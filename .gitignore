@@ -1,5 +1,5 @@
 *.pyc
 extern
-Vagrant
+Vagrantfile
 .vagrant
 data
