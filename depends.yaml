@@ -1,0 +1,10 @@
+extern:
+    -
+        repo: deploy
+        branch: v1
+    -
+        repo: search-interface
+        branch: v2
+    -
+        repo: elastic_search_cluster
+        branch: v1
