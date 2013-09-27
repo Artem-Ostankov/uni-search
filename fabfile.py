@@ -16,7 +16,7 @@ import search_interface
 from elastic_search import esc
 
 
-app_name = 'example-search'
+app_name = 'sample-search'
 
 cliqz.setup(
 	app_name = app_name,
@@ -48,10 +48,10 @@ def full_install(host_details = None):
 	pkg = cliqz.package.gen_definition()
 	local( "tar cjf {} modules".format( pkg['local'] ) )
 	cliqz.package.install( pkg, '/opt/' + app_name )
-	
+	install_esc()
 	search_interface.install( 
 		module_path = '/opt/' + app_name + '/modules',
-		class_name = 'example-search.search.Search'
+		class_name = 'sample-search.search.Search'
 	)
 
 @task
