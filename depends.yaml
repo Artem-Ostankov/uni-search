@@ -7,4 +7,4 @@ extern:
         branch: v2
     -
         repo: elastic_search_cluster
-        branch: v1
+        branch: v2
