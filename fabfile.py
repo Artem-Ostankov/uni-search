@@ -11,7 +11,7 @@ import search_tasks as sc
 import search_interface
 
 # You need to change this name for your app, and likely to run this test
-app_name = 'sample-search-oct'
+app_name = 'sample-search-oct15'
 
 @task 
 def config_dev_host():
@@ -47,5 +47,7 @@ cliqz.setup(
 	},
 	search = {
 		'primary_install': full_install,
+		# This is an arbitrary name for the ElasticSearch cluster (default for sc.* tasks)
+		'default_cluster': 'bell',
 	},
 )
