@@ -9,6 +9,7 @@ import cliqz_tasks as std
 import search_tasks as sc
 
 import search_interface
+from elastic_search import esc
 
 # You need to change this name for your app, and likely to run this test
 app_name = 'sample-search-oct15'
