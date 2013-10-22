@@ -2,11 +2,14 @@
 	An example which makes use of the search-interface component. This launches a host
 	which has the search interface and provides a test search interface.
 """
-from fabric.api import task, local
+from fabric.api import task, local, run, cd
 
 import cliqz
 import cliqz_tasks as std
 import search_tasks as sc
+
+from entity_extractor import ee
+from db_install import db
 
 import search_interface
 from elastic_search import esc
@@ -28,6 +31,19 @@ def install_esc():
 		heap_size = 1,
 		single_node = True, # You only want this for testing, remove for any >1 node size cluster
 	)
+
+@task
+def install_entity_extractor():
+	db.install_db()
+	ee.install_ee()
+
+@task
+def build_entity_db():
+	cliqz.cli.ensure_dir('/mnt/data/')
+	with cd('/mnt/data/'):
+		run('wget http://source-packages.clyqz.com/de_loc.txt')
+	run('python /opt/entity-extractor/create_db.py /mnt/data/de_loc.txt /mnt/data/de_loc')
+
 
 @task
 def full_install(host_details = None):
