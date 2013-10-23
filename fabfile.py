@@ -66,6 +66,12 @@ cliqz.setup(
 	search = {
 		'primary_install': full_install,
 		# This is an arbitrary name for the ElasticSearch cluster (default for sc.* tasks)
-		'default_cluster': 'bell',
+		'default_cluster': 'eleni',
+	},
+	cluster = {
+		'instances' : [
+			{'zone' : 'c1' , 'spot_price' : 0.24, 'ebs_size' : 100, 'num_instances' : 2},
+			{'zone' : 'c2' , 'spot_price' : 0.4 , 'ebs_size' : 30, 'num_instances' : 3}
+		]
 	},
 )
