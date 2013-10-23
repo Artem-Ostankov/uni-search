@@ -54,7 +54,8 @@ def full_install(host_details = None):
 	
 	search_interface.install( 
 		module_path = '/opt/' + app_name + '/modules',
-		class_name = 'sample-search.search.Search'
+		class_name = 'sample-search.search.Search',
+		results_template = 'combined'
 	)
 
 cliqz.setup(
