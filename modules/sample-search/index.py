@@ -1,3 +1,4 @@
+from entity_extractor.simple_ee import SimpleEE
 from pyelasticsearch import ElasticSearch
 import json
 import re
@@ -37,6 +38,7 @@ def get_index_settings():
 						'text'  : { 'type' : 'string' ,  'index' : 'analyzed' , 'analyzer' : 'cliqz_intrafind_index'},
 						'title' :  { 'type' : 'string' , 'index' : 'analyzed' , 'analyzer' : 'cliqz_intrafind_index'},
 						'url' : { 'type' : 'string' , 'index' : 'analyzed' , 'analyzer' : 'cliqz_intrafind_index'},
+						'locations' : { 'type' : 'string', 'index' : 'analyzed', 'analyzer' : 'cliqz_intrafind_index'},
 						'suggestions' : { 'type' : 'completion', 'index_analyzer' : 'completion_analyzer', 'search_analyzer' : 'completion_analyzer'}
 					}
 				}
@@ -50,7 +52,8 @@ class Indexer():
 		self.es = ElasticSearch('http://localhost:9200/')
 		self.index_name = 'example'
 		self.mapping = 'pages'
-
+		self.entity_extractor = SimpleEE('/mnt/data/de_loc')
+		self.loc_list = lambda s: [entity for entity, e_type in self.entity_extractor.get_entities(s)]
 
 	def index(self, filepath):
 		self.pre_bulk_indexing_settings()
@@ -62,11 +65,13 @@ class Indexer():
 			entry = {  'url' : json_object['link_url'] }
 			entry['title'] = json_object['h1']
 			entry['text'] = json_object['summary_text']
+			title_locations = self.loc_list(entry['title'])
+			text_locations = self.loc_list(entry['text'])
+			entry['locations'] = ' '.join(title_locations+text_locations)
 			entry['suggestions'] = [] 
 			entry['suggestions'].append({'input' : entry['title'], 'weight' : 2 })
-			#TODO Enable this with entity extraction results
-			#entry['suggestions'].append({'input' :[] })
-			#entry['suggestions'][1]['input'].append(' '.join([x.strip() for x in parts[i:len(parts) - 2]]))
+			entry['suggestions'] += [{'input' : location , 'weight' : 1}
+					for location in title_locations]
 			bulk_request.append(entry)
 			if (len(bulk_request) > 500) :
 				self.es.bulk_index(self.index_name, self.mapping, bulk_request)
