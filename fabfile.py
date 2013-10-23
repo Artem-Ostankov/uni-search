@@ -47,6 +47,7 @@ def build_entity_db():
 
 @task
 def full_install(host_details = None):
+	install_entity_extractor()
 	cliqz.cli.python_package('pyelasticsearch')
 	pkg = cliqz.package.gen_definition()
 	local( "tar cjf {} modules indexing data".format( pkg['local'] ) )
