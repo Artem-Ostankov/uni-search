@@ -9,9 +9,9 @@ from pyelasticsearch import ElasticSearch
 
 def format_es_result(result):
 	logger.info(result)
-	return dict(title=result.get('h1', ''),
-				desc=result.get('summary_text',''),
-				url=result.get('link_url', ''))
+	return dict(title=result.get('title', ''),
+				desc=result.get('text',''),
+				url=result.get('url', ''))
 
 
 class Search():
@@ -31,3 +31,14 @@ class Search():
 		results_raw = es.search( dsl, index='example', doc_type='pages', size=count)
 		results = [format_es_result(r['_source']) for r in results_raw['hits']['hits']]
 		return results
+
+	def suggest(self, query):
+		es = ElasticSearch('http://localhost:9200/')
+		body = { "pages":
+					{ "text" : query , 
+					  "completion" : { "field" : "suggestions" } 
+					 } 
+				}
+		results = es.send_request('POST', ['example', '_suggest'], body=body)
+		logger.info(results)
+		return [{'value': r['text'], 'score': r['score']} for r in results['pages'][0]['options']]
