@@ -42,7 +42,7 @@ def build_entity_db():
 	cliqz.cli.ensure_dir('/mnt/data/')
 	with cd('/mnt/data/'):
 		run('wget http://source-packages.clyqz.com/de_loc.txt')
-	run('python /opt/entity-extractor/create_db.py /mnt/data/de_loc.txt /mnt/data/de_loc')
+	run('python /opt/entity-extractor/src/create_db.py /mnt/data/de_loc.txt /mnt/data/de_loc')
 
 
 @task
