@@ -21,16 +21,38 @@ class Search():
 	"""
 	
 	
-	def search(self,query, count, offset, **kwargs):
+	def combined_search(self,query, count, offset, **kwargs):
 		"""
 			Takes a query and performs a search. This returns the list of results as a Python array
 			of objects with the standard document field definitions.
 		"""
 		es = ElasticSearch('http://localhost:9200/')
-		dsl ={ 'query' : {'bool' : {'must' : { 'match' : { '_all' : query }}}}}
+		dsl ={ 'query' : {
+					'bool' : {
+						'must' : { 
+							'match' : { '_all' : query }
+							}
+						}
+					},
+			   'suggest' : {
+					'pages' : {
+						'text' : query,
+						'term' : {
+							'size' : 1,
+							'suggest_mode' : 'popular',
+							'sort' : 'frequency',
+							'field' : 'text'
+						}
+					}
+				}
+
+			}
 		results_raw = es.search( dsl, index='example', doc_type='pages', size=count)
-		results = [format_es_result(r['_source']) for r in results_raw['hits']['hits']]
-		return results
+		logger.info(results_raw)
+		response = { 'results' : [format_es_result(r['_source']) for r in results_raw['hits']['hits']] }
+		if 'suggest' in results_raw and len(results_raw['suggest']['pages'][0]['options']) > 0 and results_raw['suggest']['pages'][0]['options'][0]['score'] > 0.75 and results_raw['suggest']['pages'][0]['options'][0]['freq'] > len(response['results']):
+			response['correction'] = results_raw['suggest']['pages'][0]['options'][0]['text']
+		return response
 
 	def suggest(self, query):
 		es = ElasticSearch('http://localhost:9200/')
