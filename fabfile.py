@@ -69,4 +69,10 @@ cliqz.setup(
 		# This is an arbitrary name for the ElasticSearch cluster (default for sc.* tasks)
 		'default_cluster': 'bell',
 	},
+	cluster = {
+		'instances' : [
+			{'zone' : 'c1', 'spot_price' : 0.24, 'ebs_size' : 33, 'num_instances' : 2},
+			{'zone' : 'c2', 'spot_price' : 0.4, 'ebs_size' : 66, 'num_instances' : 1},
+		]
+	},
 )
