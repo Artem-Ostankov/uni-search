@@ -68,5 +68,12 @@ cliqz.setup(
 		'primary_install': full_install,
 		# This is an arbitrary name for the ElasticSearch cluster (default for sc.* tasks)
 		'default_cluster': 'bell',
+		'buckets': ['fetcher-output'],
+	},
+	cluster = {
+		'instances' : [
+			{'price_zone' : 'c1', 'spot_price' : 0.24, 'ebs_size' : 33, 'num_instances' : 2},
+			#{'price_zone' : 'c2', 'spot_price' : 0.4, 'ebs_size' : 66, 'num_instances' : 3},
+		]
 	},
 )
