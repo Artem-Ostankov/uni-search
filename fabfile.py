@@ -5,7 +5,6 @@
 from fabric.api import task, local, run, cd
 
 import cliqz
-import cliqz_tasks as std
 import search_tasks as sc
 
 from entity_extractor import ee
@@ -42,7 +41,7 @@ def build_entity_db():
 	cliqz.cli.ensure_dir('/mnt/data/')
 	with cd('/mnt/data/'):
 		run('wget http://source-packages.clyqz.com/de_loc.txt')
-	run('python /opt/entity-extractor/src/create_db.py /mnt/data/de_loc.txt /mnt/data/de_loc')
+	run('python /opt/entity-extractor/entity_extractor/create_db.py /mnt/data/de_loc.txt /mnt/data/de_loc')
 
 
 @task
