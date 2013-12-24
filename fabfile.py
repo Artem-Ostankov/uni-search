@@ -7,7 +7,7 @@ from fabric.api import task, local, run, cd
 import cliqz
 import search_tasks as sc
 
-from entity_extractor import ee
+from entity_extractor_installation import ee
 from db_install import db
 
 import search_interface
