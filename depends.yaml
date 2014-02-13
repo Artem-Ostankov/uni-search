@@ -8,9 +8,3 @@ extern:
     -
         repo: elastic_search_cluster
         branch: v2
-    -
-        repo: entity-extractor
-        branch: v1
-    -
-        repo: hunmisc
-        branch: master
