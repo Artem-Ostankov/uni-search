@@ -52,8 +52,6 @@ class Indexer():
 		self.es = ElasticSearch('http://localhost:9200/')
 		self.index_name = 'example'
 		self.mapping = 'pages'
-		self.entity_extractor = SimpleEE('/mnt/data/de_loc')
-		self.loc_list = lambda s: [entity for entity, e_type in self.entity_extractor.get_entities(s)]
 
 	def index(self, filepath):
 		self.pre_bulk_indexing_settings()
@@ -65,13 +63,9 @@ class Indexer():
 			entry = {  'url' : json_object['link_url'] }
 			entry['title'] = json_object['h1']
 			entry['text'] = json_object['summary_text']
-			title_locations = self.loc_list(entry['title'])
-			text_locations = self.loc_list(entry['text'])
-			entry['locations'] = ' '.join(title_locations+text_locations)
 			entry['suggestions'] = [] 
 			entry['suggestions'].append({'input' : entry['title'], 'weight' : 2 })
-			entry['suggestions'] += [{'input' : location , 'weight' : 1}
-					for location in title_locations]
+
 			bulk_request.append(entry)
 			if (len(bulk_request) > 500) :
 				self.es.bulk_index(self.index_name, self.mapping, bulk_request)
